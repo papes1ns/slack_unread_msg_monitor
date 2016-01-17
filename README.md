@@ -6,10 +6,9 @@ This program relies on the g9led executable, can be downloaded at:
 http://als.regnet.cz/logitech-g9-linux-led-color.html
 
 Once g9led is downloaded and compiled, find a home for it and specify it's location in G9LED variable.
-g9led requires sudo to successfully change LED color, so run script like:
-  sudo python unread_msg_monitor.py
+g9led requires sudo to successfully change LED color, so run script like: `sudo python unread_msg_monitor.py`
 
 Generate your token at https://api.slack.com/web and add it to TOKEN variable.
 
 To enable this program on start up, add the something like the following to /etc/rc.local:
-  `. /home/papes1ns/.virtualenvs/unread/bin/activate && python /home/papes1ns/Projects/hes_slack_integration/unread_msg_monitor.py &`
+`. /home/papes1ns/.virtualenvs/unread/bin/activate && python /home/papes1ns/Projects/hes_slack_integration/unread_msg_monitor.py &`
