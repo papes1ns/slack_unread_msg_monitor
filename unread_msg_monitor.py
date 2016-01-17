@@ -41,23 +41,21 @@ def start_service():
             r = requests.post(SLACK_API_URL+"im.list", {"token": TOKEN})
             im_channels = [c.get("id", None) for c in r.json().get("ims", [])]
             for channel_id in im_channels:
-                if channel_id is not None:
-                    r = requests.post(SLACK_API_URL+"im.history", {"token": TOKEN,
-                                                                   "channel": channel_id,
-                                                                   "unreads": 1})
-                    if r.json().get("unread_count_display", 0) > 0:
-                        has_unread = True
+                r = requests.post(SLACK_API_URL+"im.history", {"token": TOKEN,
+                                                               "channel": channel_id,
+                                                               "unreads": 1})
+                if r.json().get("unread_count_display", 0) > 0:
+                    has_unread = True
 
             # check for unread channel posts
             r = requests.post(SLACK_API_URL+"channels.list", {"token": TOKEN})
             channels = [c.get("id", None) for c in r.json().get("channels", [])]
             for channel_id in channels:
-                if channel_id is not None:
-                    r = requests.post(SLACK_API_URL+"channels.history", {"token": TOKEN,
-                                                                         "channel": channel_id,
-                                                                         "unreads": 1})
-                    if r.json().get("unread_count_display", 0) > 0:
-                        has_unread = True
+                r = requests.post(SLACK_API_URL+"channels.history", {"token": TOKEN,
+                                                                     "channel": channel_id,
+                                                                     "unreads": 1})
+                if r.json().get("unread_count_display", 0) > 0:
+                    has_unread = True
 
         except requests.exceptions.ConnectionError:
             sys.stderr.write("Could not connect to slack.\n")
