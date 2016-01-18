@@ -26,7 +26,7 @@ from time import sleep
 
 # user defined settings
 TOKEN = ""
-G9LED_PATH = "/home/papes1ns/Projects/"  # where did you put g9led executable?
+G9LED_PATH = "/home/papes1ns/Projects/g9led"  # where did you put g9led executable?
 
 # has_unread G9 mouse color mapping
 # can use any hex value for color
@@ -67,11 +67,11 @@ def start_service():
             except requests.exceptions.ConnectionError:
                 sys.stderr.write("Could not connect to slack.\n")
 
-        call(G9LED_PATH + "g9led " + COLORS[str(has_unread)], shell=True)
+        call(G9LED_PATH + " " + COLORS[str(has_unread)], shell=True)
         sleep(1)  # let slack server rest for a second.. literally
 
 if __name__ == "__main__":
-    if not os.path.isfile(G9LED_PATH + "g9led"):
+    if not os.path.isfile(G9LED_PATH):
         sys.stderr.write("Could not find g9led executable in %s\n" % G9LED_PATH)
         sys.exit(1)
 
