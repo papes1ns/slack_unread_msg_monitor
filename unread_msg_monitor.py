@@ -24,7 +24,7 @@ import os
 from subprocess import call
 from time import sleep
 
-SLACK_API_URL = "https://slack.com/api/"
+# user defined settings
 TOKEN = ""
 G9LED_PATH = "/home/papes1ns/Projects/"  # where did you put g9led executable?
 
@@ -45,6 +45,8 @@ API_METHODS = {
         "history": "channels.history"
     }
 }
+
+SLACK_API_URL = "https://slack.com/api/"
 
 
 def start_service():
