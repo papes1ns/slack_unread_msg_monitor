@@ -28,7 +28,7 @@ from subprocess import call
 from time import sleep
 
 # user defined settings
-TOKEN = ""
+TOKEN = "xoxp-15777566643-18203039952-18684119408-619ec1e889"
 G9LED_PATH = "/home/papes1ns/Projects/g9led"  # where did you put g9led?
 REFRESH_RATE = 5  # sleep for how many seconds between requests?
 
@@ -71,7 +71,7 @@ def get_channel_ids(method, kwargs):
 
 
 def has_unread(channel_ids, kwargs, unread_id):
-    # method: string
+    # channel_ids: list
     # kwargs: dict
     # unread_id: sting
 
@@ -86,6 +86,7 @@ def has_unread(channel_ids, kwargs, unread_id):
             r = requests.post(SLACK_API_URL + kwargs["history"], payload)
         except requests.exceptions.ConnectionError:
             sys.stderr.write("Could not connect to slack.\n")
+            break
 
         if r.json().get("unread_count_display", 0) > 0:
             return channel_id
