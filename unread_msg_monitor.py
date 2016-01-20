@@ -28,7 +28,7 @@ from subprocess import call
 from time import sleep
 
 # user defined settings
-TOKEN = "xoxp-15777566643-18203039952-18684119408-619ec1e889"
+TOKEN = ""
 G9LED_PATH = "/home/papes1ns/Projects/g9led"  # where did you put g9led?
 REFRESH_RATE = 5  # sleep for how many seconds between requests?
 
