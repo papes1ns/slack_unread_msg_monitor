@@ -1,11 +1,35 @@
+""" Program changes the LED color of Logitech G9 mouse based on slack
+unread message count. If there's unread messages, change LED to white, if
+there's no message, turn off the light. Checks all subscribed channels.
+
+This program relies on the g9led executable, can be downloaded at:
+  http://als.regnet.cz/logitech-g9-linux-led-color.html
+
+Once g9led is downloaded and compiled, find a home for it and specify it's
+location in G9LED variable.
+
+Requires the python packages: ws4py and requests. Can be installed with pip.
+
+g9led requires sudo to successfully change LED color, so run script like:
+  sudo python ws4slack_unreadr.py
+
+Generate your token at https://api.slack.com/web and add it to TOKEN variable.
+
+To enable this program on start up, add the something like in /etc/rc.local:
+  . /home/papes1ns/.virtualenvs/unread/bin/activate &&
+  python /home/papes1ns/Projects/hes_slack_integration/ws4slack_unread.py &
+"""
+
 import json
 import requests
 from time import sleep
 from subprocess import call
 from ws4py.client.threadedclient import WebSocketClient
 
-TOKEN = ""
-G9LED_PATH = "/home/papes1ns/Projects/g9led"
+TOKEN = ""  # slack token you generated goes here
+G9LED_PATH = "/home/papes1ns/Projects/g9led"  # where did you put g9led?
+
+# color mapping for unread (on) and read (off). Use an hex colors your heart desires
 COLORS = {"on": "FFFFFF",
           "off": "000000"}
 
@@ -41,11 +65,11 @@ class SlackWebSocket(WebSocketClient):
         is_on = False
         while True:
             if len(self.unreads) > 0:
-                if is_on != True:
+                if is_on is not True:
                     call(G9LED_PATH + " %s" % COLORS['on'], shell=True)
                     is_on = True
             else:
-                if is_on != False:
+                if is_on is not False:
                     call(G9LED_PATH + " %s" % COLORS['off'], shell=True)
                     is_on = False
             sleep(1)
@@ -57,5 +81,4 @@ if __name__ == '__main__':
         ws.connect()
         ws.spawn_unread_checker()
     except KeyboardInterrupt:
-        print "closing socket\n"
         ws.close()
