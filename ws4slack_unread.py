@@ -16,8 +16,7 @@ g9led requires sudo to successfully change LED color, so run script like:
 Generate your token at https://api.slack.com/web and add it to TOKEN variable.
 
 To enable this program on start up, add the something like in /etc/rc.local:
-  . /home/papes1ns/.virtualenvs/unread/bin/activate &&
-  python /home/papes1ns/Projects/hes_slack_integration/ws4slack_unread.py &
+  /home/papes1ns/.virtualenvs/unread/bin/python /home/papes1ns/Projects/slack_unread_msg_monitor/ws4slack_unread.py &
 """
 
 import json
@@ -29,7 +28,7 @@ from ws4py.client.threadedclient import WebSocketClient
 TOKEN = ""  # slack token you generated goes here
 G9LED_PATH = "/home/papes1ns/Projects/g9led"  # where did you put g9led?
 
-# color mapping for unread (on) and read (off). Use an hex colors your heart desires
+# color mapping for unread (on) and read (off). Use any hex colors your heart desires
 COLORS = {"on": "FFFFFF",
           "off": "000000"}
 
@@ -37,7 +36,7 @@ COLORS = {"on": "FFFFFF",
 class SlackWebSocket(WebSocketClient):
     def __init__(self, *args, **kwargs):
         # SlackWebSocket will not create object if this request fails
-        r = requests.post("https://slack.com/api/rtm.start", {'token': TOKEN}).json()
+        r = self.get_slack_ws_data()
 
         self.channels = []
         self.unreads = {}
@@ -63,6 +62,7 @@ class SlackWebSocket(WebSocketClient):
 
     def spawn_unread_checker(self):
         is_on = False
+        first_run = True
         while True:
             if len(self.unreads) > 0:
                 if is_on is not True:
@@ -72,7 +72,21 @@ class SlackWebSocket(WebSocketClient):
                 if is_on is not False:
                     call(G9LED_PATH + " %s" % COLORS['off'], shell=True)
                     is_on = False
+		elif first_run is True:
+                    call(G9LED_PATH + " %s" % COLORS['off'], shell=True)
+		    first_run = False
             sleep(1)
+
+    def get_slack_ws_data(self):
+        while True:
+            try:
+                r = requests.post("https://slack.com/api/rtm.start", {'token': TOKEN})
+                return r.json()
+            except requests.exceptions.ConnectionError as e:
+                with open("/home/papes1ns/logs/ws4slack_unread.log", "a+") as out:
+                    out.write(str(e) + "\n")
+                sleep(5)
+
 
 
 if __name__ == '__main__':

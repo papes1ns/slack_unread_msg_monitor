@@ -13,4 +13,4 @@ Generate your token at https://api.slack.com/web and add it to TOKEN variable.
 Requires `ws4py` and `requests`, you can install them with pip.
 
 To enable this program on start up, add the something like the following to /etc/rc.local:
-`. /home/papes1ns/.virtualenvs/unread/bin/activate && python /home/papes1ns/Projects/hes_slack_integration/ws4slack_unread.py &`
+`/home/papes1ns/.virtualenvs/unread/bin/python /home/papes1ns/Projects/slack_unread_msg_monitor/ws4slack_unread.py &`
